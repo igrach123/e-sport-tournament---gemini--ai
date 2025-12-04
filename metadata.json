@@ -1,0 +1,5 @@
+{
+  "name": "E-Sports Tournament Manager",
+  "description": "A simple application to manage players and create tournaments for popular e-sports titles like EA Sports FC, Fortnite, and Mario Kart.",
+  "requestFramePermissions": []
+}
