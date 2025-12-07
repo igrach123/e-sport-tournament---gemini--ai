@@ -49,16 +49,24 @@ export interface FortniteTournament extends BaseTournament {
   leaderboard: FortniteLeaderboardEntry[];
 }
 
-// --- Mario Kart Specific Types (Placeholders) ---
-export interface MarioKartLeaderboardEntry {
-  player: Player;
-  totalPoints: number;
+// --- Mario Kart Specific Types ---
+export interface MKRace {
+  id: string;
+  players: (Player | null)[];
+  positions: (number | null)[]; // 1-based rank (1st, 2nd, 3rd, 4th)
+  advancementCount: number; // How many players advance from this race
+  isFinished: boolean;
+}
+
+export interface MKRound {
+  name: string;
+  races: MKRace[];
 }
 
 export interface MarioKartTournament extends BaseTournament {
   game: Game.MarioKart;
-  leaderboard: MarioKartLeaderboardEntry[];
-  // Races will be added later
+  rounds: MKRound[];
+  winner: Player | null;
 }
 
 // --- Discriminated Union for all Tournament types ---

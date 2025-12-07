@@ -209,7 +209,7 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                      </form>
                  )}
             </div>
-            <p className="text-xs text-gray-500 mb-2">Drag rows to reorder rank automatically, or enter specific placement values.</p>
+            <p className="text-xs text-gray-500 mb-2">Drag rows to reorder rank, or type values manually.</p>
 
             <form onSubmit={handleSubmit}>
                 <div className="space-y-2 bg-gray-900/50 rounded-lg p-2 border border-gray-700 max-h-96 overflow-y-auto custom-scrollbar">
@@ -235,9 +235,9 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                                         <span className="truncate text-gray-200 text-sm font-medium">{player.name}</span>
                                     </div>
                                     
-                                    <div className="flex items-center gap-1 sm:gap-2">
+                                    <div className="flex items-center gap-2">
                                         <div className="flex flex-col items-center">
-                                            <label htmlFor={`place-${player.id}`} className="text-[10px] text-gray-500 uppercase tracking-wider scale-75 sm:scale-100">Place</label>
+                                            <label htmlFor={`place-${player.id}`} className="text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">Place</label>
                                             <input
                                                 id={`place-${player.id}`}
                                                 type="number"
@@ -245,12 +245,12 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                                                 onChange={(e) => handlePlacementChange(player.id, e.target.value)}
                                                 placeholder="-"
                                                 min="1"
-                                                className="w-10 sm:w-12 text-center bg-gray-900 border border-gray-600 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                                                className="w-12 text-center bg-gray-700 text-white border border-gray-600 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-500"
                                             />
                                         </div>
 
                                         <div className="flex flex-col items-center">
-                                            <label htmlFor={`kills-${player.id}`} className="text-[10px] text-gray-500 uppercase tracking-wider scale-75 sm:scale-100">Kills</label>
+                                            <label htmlFor={`kills-${player.id}`} className="text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">Kills</label>
                                             <input
                                                 id={`kills-${player.id}`}
                                                 type="number"
@@ -258,26 +258,26 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                                                 onChange={(e) => handleKillChange(player.id, e.target.value)}
                                                 placeholder="0"
                                                 min="0"
-                                                className="w-10 sm:w-12 text-center bg-gray-900 border border-gray-600 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                                                className="w-12 text-center bg-gray-700 text-white border border-gray-600 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-500"
                                             />
                                         </div>
 
                                         <div className="flex flex-col items-center">
-                                            <label htmlFor={`score-${player.id}`} className="text-[10px] text-gray-500 uppercase tracking-wider scale-75 sm:scale-100">Score</label>
+                                            <label htmlFor={`score-${player.id}`} className="text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">Score</label>
                                             <input
                                                 id={`score-${player.id}`}
                                                 type="number"
                                                 value={scores[player.id] ?? ''}
                                                 onChange={(e) => handleScoreChange(player.id, e.target.value)}
                                                 placeholder="0"
-                                                className="w-12 sm:w-14 text-center bg-gray-900 border border-indigo-500/50 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 font-semibold text-indigo-300"
+                                                className="w-14 text-center bg-gray-700 text-indigo-300 font-bold border border-gray-600 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                                             />
                                         </div>
 
                                         <button 
                                             type="button"
                                             onClick={() => onRemovePlayer(tournament.id, player.id)}
-                                            className="text-gray-600 hover:text-red-400 p-1.5 rounded transition-colors ml-1 mt-3"
+                                            className="text-gray-500 hover:text-red-400 p-1 rounded transition-colors mt-4"
                                             title="Remove player"
                                         >
                                             <TrashIcon className="w-4 h-4" />

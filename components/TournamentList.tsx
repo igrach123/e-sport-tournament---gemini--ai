@@ -8,6 +8,7 @@ interface TournamentListProps {
   allPlayers: Player[];
   onUpdateEAFCScore: (tournamentId: string, matchId: string, scores: [number, number]) => void;
   onUpdateFortniteScores: (tournamentId: string, leaderboard: FortniteLeaderboardEntry[]) => void;
+  onUpdateMarioKartRace: (tournamentId: string, roundIndex: number, raceIndex: number, positions: (number | null)[]) => void;
   onDeleteTournament: (tournamentId: string) => void;
   onAddPlayerToTournament: (tournamentId: string, playerId: string) => void;
   onRemovePlayerFromTournament: (tournamentId: string, playerId: string) => void;
@@ -18,6 +19,7 @@ const TournamentList: React.FC<TournamentListProps> = ({
   allPlayers,
   onUpdateEAFCScore, 
   onUpdateFortniteScores, 
+  onUpdateMarioKartRace,
   onDeleteTournament,
   onAddPlayerToTournament,
   onRemovePlayerFromTournament
@@ -37,6 +39,7 @@ const TournamentList: React.FC<TournamentListProps> = ({
               allPlayers={allPlayers}
               onUpdateEAFCScore={(matchId, scores) => onUpdateEAFCScore(tournament.id, matchId, scores)}
               onUpdateFortniteScores={onUpdateFortniteScores}
+              onUpdateMarioKartRace={(rIndex, raceIndex, pos) => onUpdateMarioKartRace(tournament.id, rIndex, raceIndex, pos)}
               onDeleteTournament={onDeleteTournament}
               onAddPlayerToTournament={onAddPlayerToTournament}
               onRemovePlayerFromTournament={onRemovePlayerFromTournament}

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Player, Tournament, Game, EAFCTournament, FortniteLeaderboardEntry, Round, Match, MarioKartLeaderboardEntry } from './types';
+import { Player, Tournament, Game, EAFCTournament, FortniteLeaderboardEntry, Round, Match, MarioKartTournament } from './types';
 import PlayerManager from './components/PlayerManager';
 import TournamentManager from './components/TournamentManager';
 import TournamentList from './components/TournamentList';
 import StorageManager from './components/StorageManager';
 import { EsportsIcon, CogIcon, CheckCircleIcon } from './components/icons';
-import { generateFifaKnockoutBracket } from './utils/tournamentUtils';
+import { generateFifaKnockoutBracket, generateMarioKartBracket } from './utils/tournamentUtils';
 
 const App: React.FC = () => {
   const [players, setPlayers] = useState<Player[]>(() => {
@@ -73,7 +73,14 @@ const App: React.FC = () => {
         } else if (newTournament.game === Game.Fortnite) {
             newTournament.leaderboard = newTournament.leaderboard.filter((entry: FortniteLeaderboardEntry) => entry.player.id !== playerId);
         } else if (newTournament.game === Game.MarioKart) {
-            newTournament.leaderboard = newTournament.leaderboard.filter((entry: MarioKartLeaderboardEntry) => entry.player.id !== playerId);
+            // Remove from races if present
+            newTournament.rounds.forEach(round => {
+                round.races.forEach(race => {
+                    race.players = race.players.map(p => (p?.id === playerId ? null : p));
+                    // If race was finished and this player was a winner, we might need to reset.
+                    // For simplicity, just removing them. Recalculation would be complex.
+                });
+            });
         }
         
         return newTournament;
@@ -116,10 +123,11 @@ const App: React.FC = () => {
             };
             break;
         case Game.MarioKart:
+            const mkData = generateMarioKartBracket(tournamentData.players);
             newTournament = {
                 ...baseTournamentData,
                 game: Game.MarioKart,
-                leaderboard: tournamentData.players.map(p => ({ player: p, totalPoints: 0 })),
+                ...mkData
             };
             break;
         default:
@@ -199,6 +207,7 @@ const App: React.FC = () => {
 
         if (p1 && p2 && scores[0] !== null && scores[1] !== null) {
             const finalWinner = scores[0] >= scores[1] ? p1 : p2;
+            const previousWinnerId = match.winnerId;
             match.winnerId = finalWinner.id;
 
             const isFinalRound = roundIndex === newTournament.rounds.length - 1;
@@ -209,33 +218,140 @@ const App: React.FC = () => {
                 const nextRound = newTournament.rounds[roundIndex + 1];
                 const isPrelimRound = currentRound.name === 'Preliminary Round';
                 
-                if (isPrelimRound) {
-                    const openMatches = nextRound.matches
-                        .map((m, idx) => ({ match: m, originalIndex: idx }))
-                        .filter(item => item.match.players.includes(null));
-                
-                    if (openMatches[matchIndex]) {
-                        const targetMatchInfo = openMatches[matchIndex];
-                        const targetMatch = targetMatchInfo.match;
-                        const targetMatchOriginalIndex = targetMatchInfo.originalIndex;
-                        
-                        const nextPlayerSlot = targetMatch.players.indexOf(null);
+                let targetMatch: Match | undefined;
+                let targetSlot: number = 0;
 
-                        if(nextPlayerSlot !== -1){
-                           newTournament.rounds[roundIndex + 1].matches[targetMatchOriginalIndex].players[nextPlayerSlot] = finalWinner;
-                        }
-                    }
+                if (isPrelimRound) {
+                    const offset = nextRound.matches.length - currentRound.matches.length;
+                    const targetMatchIndex = offset + matchIndex;
+                    targetMatch = nextRound.matches[targetMatchIndex];
+                    targetSlot = 1;
                 } else {
                     const nextMatchIndex = Math.floor(matchIndex / 2);
-                    const nextPlayerSlot = matchIndex % 2;
-                    if(nextRound.matches[nextMatchIndex]){
-                       nextRound.matches[nextMatchIndex].players[nextPlayerSlot] = finalWinner;
+                    targetSlot = matchIndex % 2;
+                    targetMatch = nextRound.matches[nextMatchIndex];
+                }
+
+                if (targetMatch) {
+                    targetMatch.players[targetSlot] = finalWinner;
+
+                    if (previousWinnerId !== finalWinner.id) {
+                         targetMatch.scores = [null, null];
+                         targetMatch.winnerId = null;
+
+                         if (roundIndex + 2 < newTournament.rounds.length) {
+                             const nextNextRound = newTournament.rounds[roundIndex + 2];
+                             let targetMatchIndexInNextRound = -1;
+                             
+                             if (isPrelimRound) {
+                                targetMatchIndexInNextRound = (nextRound.matches.length - currentRound.matches.length) + matchIndex;
+                             } else {
+                                targetMatchIndexInNextRound = Math.floor(matchIndex / 2);
+                             }
+
+                             const nnMatchIndex = Math.floor(targetMatchIndexInNextRound / 2);
+                             const nnSlot = targetMatchIndexInNextRound % 2;
+
+                             if (nextNextRound.matches[nnMatchIndex]) {
+                                 nextNextRound.matches[nnMatchIndex].players[nnSlot] = null;
+                                 nextNextRound.matches[nnMatchIndex].scores = [null, null];
+                                 nextNextRound.matches[nnMatchIndex].winnerId = null;
+                             }
+                         }
+                         if (newTournament.winner) {
+                             newTournament.winner = null;
+                         }
                     }
                 }
             }
         }
         
         newTournaments[tournamentIndex] = newTournament;
+        return newTournaments;
+    });
+  };
+
+  const handleUpdateMKRace = (tournamentId: string, roundIndex: number, raceIndex: number, positions: (number | null)[]) => {
+    setTournaments(prev => {
+        const newTournaments = [...prev];
+        const tIndex = newTournaments.findIndex(t => t.id === tournamentId);
+        if (tIndex === -1) return prev;
+        
+        const t = newTournaments[tIndex];
+        if (t.game !== Game.MarioKart) return prev;
+
+        const newT = JSON.parse(JSON.stringify(t)) as MarioKartTournament;
+        const race = newT.rounds[roundIndex]?.races[raceIndex];
+        
+        if (!race) return prev;
+
+        race.positions = positions;
+        
+        // Check if race is finished (all active players have positions)
+        const activePlayersCount = race.players.filter(p => p !== null).length;
+        const positionsFilledCount = positions.filter(p => p !== null).length;
+        
+        if (activePlayersCount > 0 && positionsFilledCount === activePlayersCount) {
+            race.isFinished = true;
+            
+            // Determine winners
+            // Map players to their positions
+            const results = race.players
+                .map((p, idx) => ({ player: p, pos: positions[idx] }))
+                .filter(item => item.player !== null && item.pos !== null)
+                .sort((a, b) => (a.pos as number) - (b.pos as number)); // Sort by position ascending (1st is best)
+            
+            // Take top N
+            const winners = results.slice(0, race.advancementCount).map(r => r.player!);
+
+            // If final round, set tournament winner
+            if (roundIndex === newT.rounds.length - 1) {
+                newT.winner = winners[0] || null;
+            } else {
+                // Propagate to next round
+                // We need to find empty slots in the next round races.
+                // Simple strategy: Iterate next round races, fill null slots linearly.
+                
+                // Reset subsequent rounds first to ensure clean state
+                for (let r = roundIndex + 1; r < newT.rounds.length; r++) {
+                     newT.rounds[r].races.forEach(rc => {
+                         rc.players = rc.players.map(() => null);
+                         rc.positions = rc.positions.map(() => null);
+                         rc.isFinished = false;
+                     });
+                }
+                newT.winner = null;
+
+                // Re-propagate ALL finished races from current round to next
+                const allWinnersFromCurrentRound: Player[] = [];
+                newT.rounds[roundIndex].races.forEach(r => {
+                    if (r.isFinished) {
+                         const rResults = r.players
+                            .map((p, idx) => ({ player: p, pos: r.positions[idx] }))
+                            .filter(item => item.player !== null && item.pos !== null)
+                            .sort((a, b) => (a.pos as number) - (b.pos as number));
+                         
+                         const rWinners = rResults.slice(0, r.advancementCount).map(res => res.player!);
+                         allWinnersFromCurrentRound.push(...rWinners);
+                    }
+                });
+
+                // Fill next round
+                let currentWinnerIdx = 0;
+                const nextRound = newT.rounds[roundIndex + 1];
+                for (const nextRace of nextRound.races) {
+                    for (let i = 0; i < nextRace.players.length; i++) {
+                        if (currentWinnerIdx < allWinnersFromCurrentRound.length) {
+                            nextRace.players[i] = allWinnersFromCurrentRound[currentWinnerIdx++];
+                        }
+                    }
+                }
+            }
+        } else {
+            race.isFinished = false;
+        }
+
+        newTournaments[tIndex] = newT;
         return newTournaments;
     });
   };
@@ -279,8 +395,8 @@ const App: React.FC = () => {
         </header>
 
         <main className="flex flex-col gap-8">
-          {/* Top Section: Split 50/50 on large screens */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Top Section: Split 50/50 on medium+ screens */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <PlayerManager players={players} onAddPlayer={handleAddPlayer} onDeletePlayer={handleDeletePlayer} />
             <TournamentManager players={players} onCreateTournament={handleCreateTournament} />
           </div>
@@ -292,6 +408,7 @@ const App: React.FC = () => {
               allPlayers={players}
               onUpdateEAFCScore={handleUpdateEAFCScore}
               onUpdateFortniteScores={handleUpdateFortniteScores}
+              onUpdateMarioKartRace={handleUpdateMKRace}
               onDeleteTournament={handleDeleteTournament}
               onAddPlayerToTournament={handleAddPlayerToTournament}
               onRemovePlayerFromTournament={handleRemovePlayerFromTournament}
