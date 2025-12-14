@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,19 +7,32 @@
     <title>E-Sports Tournament Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+      :root {
+        --shadow-grey: #272932;
+        --dark-garnet: #710000;
+        --bright-lemon: #fdf500;
+        --ocean-mist: #1ac5b0;
+        --electric-aqua: #37ebf3;
+        --soft-periwinkle: #9381ff;
+        --deep-pink: #e455ae;
+        --vivid-orchid: #cb1dcd;
+        --dust-grey: #d1c5c0;
+      }
+      
       /* Custom scrollbar for a more modern look in dark mode */
       ::-webkit-scrollbar {
         width: 8px;
+        height: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #1f2937; /* bg-gray-800 */
+        background: var(--shadow-grey);
       }
       ::-webkit-scrollbar-thumb {
-        background: #4b5563; /* bg-gray-600 */
+        background: #4b5563; 
         border-radius: 4px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #6b7280; /* bg-gray-500 */
+        background: var(--dust-grey);
       }
     </style>
   <script type="importmap">
@@ -33,7 +45,7 @@
 }
 </script>
 </head>
-  <body class="bg-gray-900 text-gray-100">
+  <body class="bg-[var(--shadow-grey)] text-gray-100">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

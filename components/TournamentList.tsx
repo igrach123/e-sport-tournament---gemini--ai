@@ -25,8 +25,8 @@ const TournamentList: React.FC<TournamentListProps> = ({
   onRemovePlayerFromTournament
 }) => {
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-700 min-h-full">
-      <h2 className="text-2xl font-bold mb-6 text-indigo-400 flex items-center">
+    <div className="bg-black/20 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-white/5 min-h-full">
+      <h2 className="text-2xl font-bold mb-6 text-[var(--soft-periwinkle)] flex items-center">
         <TrophyIcon className="w-6 h-6 mr-3"/>
         Active Tournaments
       </h2>
@@ -47,7 +47,7 @@ const TournamentList: React.FC<TournamentListProps> = ({
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center h-96 text-center text-gray-400">
+        <div className="flex flex-col items-center justify-center h-96 text-center text-[var(--dust-grey)]">
             <TrophyIcon className="w-16 h-16 mb-4 text-gray-600"/>
             <p className="text-lg">No tournaments have been created yet.</p>
             <p className="text-sm">Use the form to create your first tournament!</p>

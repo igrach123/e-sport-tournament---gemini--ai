@@ -368,25 +368,25 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-[var(--shadow-grey)] text-[var(--dust-grey)] p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         <header className="flex items-center justify-between mb-8">
             <div className="flex items-center">
-                <EsportsIcon className="w-10 h-10 text-indigo-400 mr-4"/>
+                <EsportsIcon className="w-10 h-10 text-[var(--soft-periwinkle)] mr-4"/>
                 <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
                     E-Sports Tournament Hub
                 </h1>
             </div>
             <div className="flex items-center gap-4">
                 {lastSaved && (
-                    <div className="hidden sm:flex items-center text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full animate-pulse-slow">
+                    <div className="hidden sm:flex items-center text-xs text-[var(--ocean-mist)] bg-[var(--ocean-mist)]/10 px-2 py-1 rounded-full animate-pulse-slow">
                         <CheckCircleIcon className="w-3 h-3 mr-1" />
                         Auto-saved
                     </div>
                 )}
                 <button 
                     onClick={() => setIsSettingsOpen(true)}
-                    className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-full transition-colors"
+                    className="p-2 text-[var(--dust-grey)] hover:text-white hover:bg-white/5 rounded-full transition-colors"
                     title="Data Management"
                 >
                     <CogIcon className="w-6 h-6" />

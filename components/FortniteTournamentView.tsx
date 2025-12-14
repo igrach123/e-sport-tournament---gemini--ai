@@ -167,10 +167,10 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
 
     const getPositionStyle = (index: number) => {
         switch(index) {
-            case 0: return "text-yellow-400 font-bold border-yellow-500/50 bg-yellow-500/10 shadow-[0_0_10px_rgba(234,179,8,0.2)]"; // Gold
-            case 1: return "text-gray-300 font-bold border-gray-400/50 bg-gray-500/10 shadow-[0_0_10px_rgba(156,163,175,0.2)]"; // Silver
-            case 2: return "text-amber-600 font-bold border-amber-600/50 bg-orange-900/10 shadow-[0_0_10px_rgba(217,119,6,0.2)]"; // Bronze
-            default: return "text-gray-400 border-transparent";
+            case 0: return "text-[var(--bright-lemon)] font-bold border-[var(--bright-lemon)]/50 bg-[var(--bright-lemon)]/10 shadow-[0_0_10px_rgba(253,245,0,0.2)]"; // Gold
+            case 1: return "text-[var(--dust-grey)] font-bold border-[var(--dust-grey)]/50 bg-[var(--dust-grey)]/10"; // Silver
+            case 2: return "text-orange-400 font-bold border-orange-500/50 bg-orange-900/10"; // Bronze
+            default: return "text-gray-500 border-transparent";
         }
     };
 
@@ -196,23 +196,23 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                         <select 
                             value={selectedPlayerToAdd}
                             onChange={(e) => setSelectedPlayerToAdd(e.target.value)}
-                            className="bg-gray-800 border border-gray-600 text-xs rounded text-white px-2 py-1 focus:ring-1 focus:ring-indigo-500"
+                            className="bg-black/40 border border-white/10 text-xs rounded text-white px-2 py-1 focus:ring-1 focus:ring-[var(--vivid-orchid)]"
                         >
                             <option value="">+ Add Player</option>
                             {availablePlayers.map(p => (
                                 <option key={p.id} value={p.id}>{p.name}</option>
                             ))}
                         </select>
-                        <button type="submit" disabled={!selectedPlayerToAdd} className="bg-indigo-600 text-white rounded p-1 hover:bg-indigo-500 disabled:opacity-50">
+                        <button type="submit" disabled={!selectedPlayerToAdd} className="bg-[var(--vivid-orchid)] text-white rounded p-1 hover:opacity-90 disabled:opacity-50">
                             <PlusIcon className="w-4 h-4" />
                         </button>
                      </form>
                  )}
             </div>
-            <p className="text-xs text-gray-500 mb-2">Drag rows to reorder rank, or type values manually.</p>
+            <p className="text-xs text-[var(--dust-grey)] mb-2">Drag rows to reorder rank, or type values manually.</p>
 
             <form onSubmit={handleSubmit}>
-                <div className="space-y-2 bg-gray-900/50 rounded-lg p-2 border border-gray-700 max-h-96 overflow-y-auto custom-scrollbar">
+                <div className="space-y-2 bg-black/40 rounded-lg p-2 border border-white/5 max-h-96 overflow-y-auto custom-scrollbar">
                     <ul className="space-y-2">
                         {orderedPlayerIds.map((playerId, index) => {
                             const player = tournament.leaderboard.find(e => e.player.id === playerId)?.player;
@@ -226,9 +226,9 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                                     onDragEnter={(e) => handleDragEnter(e, index)}
                                     onDragEnd={handleDragEnd}
                                     onDragOver={(e) => e.preventDefault()}
-                                    className="flex items-center gap-2 bg-gray-800 p-2 sm:p-3 rounded-md border border-gray-700 cursor-move hover:border-gray-500 transition-colors"
+                                    className="flex items-center gap-2 bg-black/30 p-2 sm:p-3 rounded-md border border-white/5 cursor-move hover:border-white/20 transition-colors"
                                 >
-                                    <div className="text-gray-500 font-mono w-4 sm:w-6 text-center select-none cursor-grab active:cursor-grabbing text-lg">
+                                    <div className="text-[var(--dust-grey)] font-mono w-4 sm:w-6 text-center select-none cursor-grab active:cursor-grabbing text-lg">
                                         ☰
                                     </div>
                                     <div className="flex-grow flex items-center gap-2 overflow-hidden">
@@ -237,7 +237,7 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                                     
                                     <div className="flex items-center gap-2">
                                         <div className="flex flex-col items-center">
-                                            <label htmlFor={`place-${player.id}`} className="text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">Place</label>
+                                            <label htmlFor={`place-${player.id}`} className="text-[10px] text-[var(--dust-grey)] uppercase tracking-wider mb-0.5">Place</label>
                                             <input
                                                 id={`place-${player.id}`}
                                                 type="number"
@@ -245,12 +245,12 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                                                 onChange={(e) => handlePlacementChange(player.id, e.target.value)}
                                                 placeholder="-"
                                                 min="1"
-                                                className="w-12 text-center bg-gray-700 text-white border border-gray-600 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-500"
+                                                className="w-12 text-center bg-black/40 text-white border border-white/10 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-[var(--vivid-orchid)] focus:border-[var(--vivid-orchid)] placeholder-gray-600"
                                             />
                                         </div>
 
                                         <div className="flex flex-col items-center">
-                                            <label htmlFor={`kills-${player.id}`} className="text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">Kills</label>
+                                            <label htmlFor={`kills-${player.id}`} className="text-[10px] text-[var(--dust-grey)] uppercase tracking-wider mb-0.5">Kills</label>
                                             <input
                                                 id={`kills-${player.id}`}
                                                 type="number"
@@ -258,26 +258,26 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                                                 onChange={(e) => handleKillChange(player.id, e.target.value)}
                                                 placeholder="0"
                                                 min="0"
-                                                className="w-12 text-center bg-gray-700 text-white border border-gray-600 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-500"
+                                                className="w-12 text-center bg-black/40 text-white border border-white/10 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-[var(--vivid-orchid)] focus:border-[var(--vivid-orchid)] placeholder-gray-600"
                                             />
                                         </div>
 
                                         <div className="flex flex-col items-center">
-                                            <label htmlFor={`score-${player.id}`} className="text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">Score</label>
+                                            <label htmlFor={`score-${player.id}`} className="text-[10px] text-[var(--dust-grey)] uppercase tracking-wider mb-0.5">Score</label>
                                             <input
                                                 id={`score-${player.id}`}
                                                 type="number"
                                                 value={scores[player.id] ?? ''}
                                                 onChange={(e) => handleScoreChange(player.id, e.target.value)}
                                                 placeholder="0"
-                                                className="w-14 text-center bg-gray-700 text-indigo-300 font-bold border border-gray-600 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                                                className="w-14 text-center bg-black/40 text-[var(--vivid-orchid)] font-bold border border-white/10 rounded py-1 px-1 text-sm focus:ring-1 focus:ring-[var(--vivid-orchid)] focus:border-[var(--vivid-orchid)]"
                                             />
                                         </div>
 
                                         <button 
                                             type="button"
                                             onClick={() => onRemovePlayer(tournament.id, player.id)}
-                                            className="text-gray-500 hover:text-red-400 p-1 rounded transition-colors mt-4"
+                                            className="text-[var(--dust-grey)] hover:text-[var(--dark-garnet)] p-1 rounded transition-colors mt-4"
                                             title="Remove player"
                                         >
                                             <TrashIcon className="w-4 h-4" />
@@ -287,11 +287,11 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                             );
                         })}
                          {orderedPlayerIds.length === 0 && (
-                            <p className="text-center text-gray-500 py-4 text-sm">No players. Add some to start!</p>
+                            <p className="text-center text-[var(--dust-grey)] py-4 text-sm">No players. Add some to start!</p>
                         )}
                     </ul>
                 </div>
-                <button type="submit" className="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-md py-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 shadow-lg shadow-indigo-900/20">
+                <button type="submit" className="mt-4 w-full bg-[var(--vivid-orchid)] hover:opacity-90 text-white font-bold rounded-md py-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-[var(--vivid-orchid)] shadow-lg shadow-purple-900/20">
                     Update Leaderboard
                 </button>
             </form>
@@ -300,17 +300,17 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
       {/* RIGHT COLUMN: Display Leaderboard */}
       <div>
         <h4 className="text-lg font-semibold text-gray-300 mb-4">Current Standings</h4>
-        <div className="bg-gray-800 rounded-lg border border-gray-700 max-h-[500px] overflow-y-auto custom-scrollbar">
+        <div className="bg-black/40 rounded-lg border border-white/5 max-h-[500px] overflow-y-auto custom-scrollbar">
             {tournament.leaderboard.length > 0 ? (
             <div className="w-full">
-                <div className="flex text-xs uppercase tracking-wider text-gray-500 font-semibold border-b border-gray-700 bg-gray-800/50 sticky top-0 backdrop-blur-sm z-10">
+                <div className="flex text-xs uppercase tracking-wider text-[var(--dust-grey)] font-semibold border-b border-white/10 bg-black/60 sticky top-0 backdrop-blur-sm z-10">
                     <div className="py-3 pl-4 w-16 text-center">Rank</div>
                     <div className="py-3 px-2 flex-grow">Player</div>
                     <div className="py-3 px-2 w-16 text-center">Place</div>
                     <div className="py-3 px-2 w-16 text-center">Kills</div>
                     <div className="py-3 pr-4 w-20 text-right">Score</div>
                 </div>
-                <ul className="divide-y divide-gray-700/50">
+                <ul className="divide-y divide-white/5">
                     {tournament.leaderboard
                         .sort((a,b) => b.totalScore - a.totalScore)
                         .map((entry, index) => (
@@ -323,13 +323,13 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                             <div className="py-3 px-2 flex-grow font-medium text-gray-200 truncate">
                                 {entry.player.name}
                             </div>
-                            <div className="py-3 px-2 w-16 text-center text-gray-400 font-mono text-sm">
+                            <div className="py-3 px-2 w-16 text-center text-[var(--dust-grey)] font-mono text-sm">
                                 {entry.finishedPlace ?? '-'}
                             </div>
-                             <div className="py-3 px-2 w-16 text-center text-gray-400 font-mono text-sm">
+                             <div className="py-3 px-2 w-16 text-center text-[var(--dust-grey)] font-mono text-sm">
                                 {entry.killCount ?? '-'}
                             </div>
-                            <div className="py-3 pr-4 w-20 text-right font-bold text-indigo-400">
+                            <div className="py-3 pr-4 w-20 text-right font-bold text-[var(--vivid-orchid)]">
                                 {entry.totalScore}
                             </div>
                         </li>
@@ -337,7 +337,7 @@ const FortniteTournamentView: React.FC<FortniteTournamentViewProps> = ({
                 </ul>
             </div>
             ) : (
-            <div className="flex flex-col items-center justify-center h-48 text-gray-500">
+            <div className="flex flex-col items-center justify-center h-48 text-[var(--dust-grey)]">
                  <p>No rankings yet.</p>
             </div>
             )}

@@ -46,14 +46,14 @@ const TournamentView: React.FC<TournamentViewProps> = ({
     const rules = RULES[tournament.game];
 
     return (
-        <div className="bg-gray-900/50 rounded-lg border border-gray-700 p-4">
-            <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-4 border-b border-gray-700">
+        <div className="bg-black/30 rounded-lg border border-white/5 p-4">
+            <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-4 border-b border-white/10">
                 <div className="flex-grow">
                     <div className="flex flex-col md:flex-row md:items-baseline md:gap-4">
                         <h3 className="text-xl font-bold text-white">{tournament.name}</h3>
-                        <div className="text-[10px] text-gray-500 italic mt-1 md:mt-0 flex flex-col md:block">
+                        <div className="text-[10px] text-[var(--dust-grey)] italic mt-1 md:mt-0 flex flex-col md:block">
                              <span className="mr-2">{rules.en}</span>
-                             <span className="md:border-l md:border-gray-600 md:pl-2">{rules.hr}</span>
+                             <span className="md:border-l md:border-[var(--dust-grey)]/30 md:pl-2">{rules.hr}</span>
                         </div>
                     </div>
                     {gameInfo && (
@@ -65,20 +65,20 @@ const TournamentView: React.FC<TournamentViewProps> = ({
                 </div>
                  <div className="flex items-center gap-4 mt-3 sm:mt-0">
                     {tournament.game === Game.EASportsFC && tournament.winner && (
-                        <div className="bg-yellow-500/10 text-yellow-300 px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm">
+                        <div className="bg-[var(--bright-lemon)]/20 text-[var(--bright-lemon)] px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm border border-[var(--bright-lemon)]/30">
                             <TrophyIcon className="w-5 h-5"/>
                             <span className="font-bold">Winner: {tournament.winner.name}</span>
                         </div>
                     )}
                      {tournament.game === Game.MarioKart && tournament.winner && (
-                        <div className="bg-yellow-500/10 text-yellow-300 px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm">
+                        <div className="bg-[var(--bright-lemon)]/20 text-[var(--bright-lemon)] px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm border border-[var(--bright-lemon)]/30">
                             <TrophyIcon className="w-5 h-5"/>
                             <span className="font-bold">Winner: {tournament.winner.name}</span>
                         </div>
                     )}
                      <button 
                         onClick={() => onDeleteTournament(tournament.id)}
-                        className="text-gray-500 hover:text-red-400 transition-colors duration-200"
+                        className="text-[var(--dust-grey)] hover:text-[var(--dark-garnet)] transition-colors duration-200"
                         aria-label={`Delete tournament ${tournament.name}`}
                         >
                          <TrashIcon className="w-5 h-5"/>
@@ -102,7 +102,7 @@ const TournamentView: React.FC<TournamentViewProps> = ({
                     case Game.MarioKart:
                         return <MarioKartTournamentView tournament={tournament} onUpdateRace={onUpdateMarioKartRace} />;
                     default:
-                        return <p className="text-gray-400">This game format is not supported yet.</p>;
+                        return <p className="text-[var(--dust-grey)]">This game format is not supported yet.</p>;
                 }
             })()}
         </div>

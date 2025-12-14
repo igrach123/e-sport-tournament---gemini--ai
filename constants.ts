@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Game } from './types';
 import { FortniteIcon, MarioKartIcon, EASportsIcon } from './components/icons';
@@ -7,10 +6,10 @@ interface GameInfo {
   id: Game;
   name: string;
   Icon: React.FC<{ className?: string }>;
-  bgColor: string;
-  borderColor: string;
-  textColor: string;
-  gradient: string;
+  bgColor: string; // Tailwind class for background
+  borderColor: string; // Tailwind class for border
+  textColor: string; // Tailwind class for text
+  customHex: string; // For inline styles where arbitrary values are tricky in template literals
 }
 
 export const GAMES: GameInfo[] = [
@@ -18,28 +17,28 @@ export const GAMES: GameInfo[] = [
     id: Game.EASportsFC,
     name: 'EA Sports FC',
     Icon: EASportsIcon,
-    bgColor: 'bg-emerald-500',
-    borderColor: 'border-emerald-400',
-    textColor: 'text-emerald-300',
-    gradient: 'from-gray-800 to-emerald-900/50'
+    bgColor: 'bg-[var(--ocean-mist)]',
+    borderColor: 'border-[var(--ocean-mist)]',
+    textColor: 'text-[var(--ocean-mist)]',
+    customHex: 'var(--ocean-mist)'
   },
   {
     id: Game.Fortnite,
     name: 'Fortnite',
     Icon: FortniteIcon,
-    bgColor: 'bg-purple-500',
-    borderColor: 'border-purple-400',
-    textColor: 'text-purple-300',
-    gradient: 'from-gray-800 to-purple-900/50'
+    bgColor: 'bg-[var(--vivid-orchid)]',
+    borderColor: 'border-[var(--vivid-orchid)]',
+    textColor: 'text-[var(--vivid-orchid)]',
+    customHex: 'var(--vivid-orchid)'
   },
   {
     id: Game.MarioKart,
     name: 'Mario Kart',
     Icon: MarioKartIcon,
-    bgColor: 'bg-red-500',
-    borderColor: 'border-red-400',
-    textColor: 'text-red-300',
-    gradient: 'from-gray-800 to-red-900/50'
+    bgColor: 'bg-[var(--deep-pink)]',
+    borderColor: 'border-[var(--deep-pink)]',
+    textColor: 'text-[var(--deep-pink)]',
+    customHex: 'var(--deep-pink)'
   }
 ];
 
