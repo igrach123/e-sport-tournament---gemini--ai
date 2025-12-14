@@ -4,6 +4,7 @@ import PlayerManager from './components/PlayerManager';
 import TournamentManager from './components/TournamentManager';
 import TournamentList from './components/TournamentList';
 import StorageManager from './components/StorageManager';
+import ConfirmationModal from './components/ConfirmationModal';
 import { EsportsIcon, CogIcon, CheckCircleIcon } from './components/icons';
 import { generateFifaKnockoutBracket, generateMarioKartBracket } from './utils/tournamentUtils';
 
@@ -30,6 +31,7 @@ const App: React.FC = () => {
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -86,6 +88,45 @@ const App: React.FC = () => {
         return newTournament;
       })
     );
+  };
+
+  const handleDeleteAllPlayers = () => {
+    if (players.length === 0) return;
+    setIsDeleteAllModalOpen(true);
+  };
+
+  const executeDeleteAllPlayers = () => {
+    setPlayers([]);
+    setTournaments(prev => 
+      prev.map(t => {
+        const newTournament = JSON.parse(JSON.stringify(t)) as Tournament;
+        newTournament.players = []; 
+
+        if (newTournament.game === Game.EASportsFC) {
+            newTournament.rounds.forEach((round: Round) => {
+                round.matches.forEach((match: Match) => {
+                    match.players = [null, null];
+                    match.scores = [null, null];
+                    match.winnerId = null;
+                });
+            });
+            newTournament.winner = null;
+        } else if (newTournament.game === Game.Fortnite) {
+            newTournament.leaderboard = [];
+        } else if (newTournament.game === Game.MarioKart) {
+            newTournament.rounds.forEach(round => {
+                round.races.forEach(race => {
+                    race.players = race.players.map(() => null);
+                    race.isFinished = false;
+                });
+            });
+            newTournament.winner = null;
+        }
+        
+        return newTournament;
+      })
+    );
+    setIsDeleteAllModalOpen(false);
   };
 
   const handleDeleteTournament = (tournamentId: string) => {
@@ -397,7 +438,12 @@ const App: React.FC = () => {
         <main className="flex flex-col gap-8">
           {/* Top Section: Split 50/50 on medium+ screens */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <PlayerManager players={players} onAddPlayer={handleAddPlayer} onDeletePlayer={handleDeletePlayer} />
+            <PlayerManager 
+                players={players} 
+                onAddPlayer={handleAddPlayer} 
+                onDeletePlayer={handleDeletePlayer} 
+                onDeleteAllPlayers={handleDeleteAllPlayers}
+            />
             <TournamentManager players={players} onCreateTournament={handleCreateTournament} />
           </div>
           
@@ -412,6 +458,7 @@ const App: React.FC = () => {
               onDeleteTournament={handleDeleteTournament}
               onAddPlayerToTournament={handleAddPlayerToTournament}
               onRemovePlayerFromTournament={handleRemovePlayerFromTournament}
+              
             />
           </div>
         </main>
@@ -426,6 +473,16 @@ const App: React.FC = () => {
             onClose={() => setIsSettingsOpen(false)}
           />
       )}
+      
+      <ConfirmationModal
+        isOpen={isDeleteAllModalOpen}
+        title="Delete All Players?"
+        message="Are you sure you want to delete ALL players? This action cannot be undone and will remove players from all existing tournaments, potentially corrupting active games."
+        onConfirm={executeDeleteAllPlayers}
+        onCancel={() => setIsDeleteAllModalOpen(false)}
+        confirmLabel="Delete All"
+        isDanger={true}
+      />
     </div>
   );
 };

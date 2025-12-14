@@ -6,9 +6,10 @@ interface PlayerManagerProps {
   players: Player[];
   onAddPlayer: (name: string) => void;
   onDeletePlayer: (id: string) => void;
+  onDeleteAllPlayers: () => void;
 }
 
-const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onDeletePlayer }) => {
+const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onDeletePlayer, onDeleteAllPlayers }) => {
   const [playerName, setPlayerName] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -19,7 +20,18 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onD
 
   return (
     <div className="bg-black/20 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-white/5">
-      <h2 className="text-2xl font-bold mb-4 text-[var(--soft-periwinkle)]">Player Roster</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-[var(--soft-periwinkle)]">Player Roster</h2>
+        {players.length > 0 && (
+            <button 
+                onClick={onDeleteAllPlayers}
+                className="text-xs text-[var(--dark-garnet)] border border-[var(--dark-garnet)] hover:bg-[var(--dark-garnet)] hover:text-white px-2 py-1 rounded transition-colors uppercase font-semibold"
+                title="Remove all players"
+            >
+                Delete All
+            </button>
+        )}
+      </div>
       <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
         <input
           type="text"
